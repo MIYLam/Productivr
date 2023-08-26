@@ -53,7 +53,7 @@ def user_join_circle(conn: sqlite3.Connection, user_id: int, circle_id: int):
 def add_task(conn: sqlite3.Connection, user_id: int, circle_id: int, name: str, description: str):
     try:
         c = conn.cursor()
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, completed, name, description) VALUES({user_id}, {circle_id}, FALSE, '{name}', '{description}');""")
+        c.execute(f"""INSERT INTO task(user_id, circle_id, completed, name, description) VALUES({user_id}, {circle_id}, FALSE, '{name}', '{description}');""")
         conn.commit()
     except Exception as e:
         print(e)
@@ -91,7 +91,7 @@ def get_user_groups(conn: sqlite3.Connection, user_id:int):
     #    """
     cmd = f"SELECT id FROM circle WHERE id IN (SELECT circle_id FROM belongsTo WHERE user_id = {user_id});"
     try:
-        return pd.read_sql(sql=cmd,con=conn)
+        return pd.read_sql(sql=cmd,con=conn)['id']
     except Exception as e:
         print(e)
 

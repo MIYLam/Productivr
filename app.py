@@ -64,7 +64,7 @@ def home():
         conn = sh.get_conn_object("data.db")
         user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
         print(user_id)
-        g_ls = sh.get_user_groups(conn=conn, user_id=user_id)['id'].values.tolist()
+        g_ls = sh.get_user_groups(conn=conn, user_id=user_id).values.tolist()
         print(g_ls)
         
         if request.method == "GET":
@@ -77,7 +77,10 @@ def home():
                 group_names.append(cid)
             #    tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
             print(tasks_by_group)
-            return render_template("homepage.html", group_names = group_names)
+            print(group_names)
+            clist = zip(g_ls,group_names)
+            
+            return render_template("homepage.html", clist = clist)
           
         elif request.method == "POST":
             # create group
@@ -85,7 +88,7 @@ def home():
                 sh.add_circle(conn=conn, circlename=request.form["Group Name"], owner_id=user_id)            
             # join group
             elif True:
-                circle_id: int = int(request.form["groupId"])
+                circle_id: int = int(request.form["circle_id"])
                 sh.user_join_circle(conn=conn, user_id=user_id, circle_id=circle_id)
                 
             # display user tasks in each group
@@ -108,11 +111,17 @@ def group(group_name):
         return redirect(url_for("login"))
     else:
         conn = sh.get_conn_object("data.db")
+        user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
         if request.method == "GET":
             return render_template("group.html")
         elif request.method == "POST":
             # add a task
-            return render_template("group.html")
+            if "task_description" in request.form.keys():
+                sh.add_task(conn,user_id,group_name,request.form["task_name"],request.form["task_description"])
+            else:
+                sh.add_task(conn,user_id,group_name,request.form["task_name"],"")
+
+            return redirect(f"{group_name}")
         elif request.method == "DELETE":
             # delete a task by id
             return render_template("group.html")
