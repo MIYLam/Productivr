@@ -16,8 +16,8 @@
       <h3 class = "user_display">{{u[1]}}'s to-do list</h3>
       <hr>
       {%for t in tasks%}
-        <li>
-          {% if t[1] == u[0] and t[3] == 0 %}
+        {% if t[1] == u[0] and t[3] == 0 %}
+          <li>
             <p class = "user_display">{{t[4]}}</p>
             <form action="/group/{{t[2]}}" method="POST">
               {% if t[1] == session %}
@@ -27,8 +27,8 @@
                 {% endif %}
             </form>
           <br>
-          {% endif %}
-        </li>
+          </li>
+        {% endif %}
       {%endfor%}
     </ol>
   <hr>
