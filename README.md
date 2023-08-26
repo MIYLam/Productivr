@@ -2,4 +2,4 @@
 SYNCShack 2023 project
 
 ## Members
-Maurice, Ivan, Nathan, Ruei, Teo
+Maurice, Ivan, Nathan, Rueien, Teo
