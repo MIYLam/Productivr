@@ -35,8 +35,8 @@ def add_user(conn: sqlite3.Connection, username: str):
 def add_circle(conn: sqlite3.Connection, circlename: str, owner_id: int):
     try:
         c = conn.cursor()
-        c.execute(f"""INSERT INTO cirle(name, owner_id) VALUES('{circlename}', {owner_id});""")
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, admin) VALUES({owner_id}, (SELECT MAX(id) from circle), TRUE);""")
+        c.execute(f"""INSERT INTO circle(name, owner_id) VALUES('{circlename}', {owner_id});""")
+        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, admin) VALUES({owner_id}, (SELECT MAX(id) + 1 from circle), TRUE);""")
         conn.commit()
     except Exception as e:
         print(e)
@@ -89,7 +89,14 @@ def complete_task(conn: sqlite3.Connection, username: int):
 
 def get_user_id_by_username(conn: sqlite3.Connection, username: str) -> int:
     try:
-        return int(pd.read_sql(sql=f"SELECT id FROM user WHERE name = '{'ok'}'", con=conn)["id"])
+        return int(pd.read_sql(sql=f"SELECT id FROM user WHERE name = '{username}'", con=conn)["id"])
+    except Exception as e:
+        print(e)
+
+
+def get_circle_id_by_circlename(conn: sqlite3.Connection, circlename: str) -> int:
+    try:
+        return int(pd.read_sql(sql=f"SELECT id FROM circle WHERE name = '{circlename}'", con=conn)["id"])
     except Exception as e:
         print(e)
 
