@@ -75,12 +75,13 @@ def home():
                 print(g)
                 cid = sh.get_circlename_by_circle_id(conn=conn, circle_id=g)
                 group_names.append(cid)
+                tasks_by_group[g] = sh.get_user_tasks_by_circle(conn=conn, circle_id=g, user_id=user_id).to_dict('records')
             #    tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
             print(tasks_by_group)
             print(group_names)
             clist = zip(g_ls,group_names)
             
-            return render_template("homepage.html", clist = clist)
+            return render_template("homepage.html", clist = clist, tasks = tasks_by_group)
           
         elif request.method == "POST":
             # create group

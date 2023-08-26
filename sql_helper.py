@@ -58,7 +58,7 @@ def add_task(conn: sqlite3.Connection, user_id: int, circle_id: int, name: str, 
     except Exception as e:
         print(e)
 
-def get_user_tasks(conn: sqlite3.Connection, user_id: int, circle_id: int = -1):
+def get_user_tasks_by_circle(conn: sqlite3.Connection, user_id: int, circle_id: int = -1):
     try:
         # c = conn.cursor()
         if circle_id == -1:
