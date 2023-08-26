@@ -10,11 +10,11 @@ def get_conn_object(file_path):
         print(e)
     return conn
 
-def execute_commands(conn, cmd):
+
+def execute_commands(conn: sqlite3.Connection, cmd: str):
     try:
         c = conn.cursor()
-        c.execute(cmd)
-        return pd.DataFrame(c.fetchall())
+        c.executescript(cmd)
     except Exception as e:
         print(e)
 
@@ -85,12 +85,15 @@ def complete_task(conn: sqlite3.Connection, task_id: int):
     except Exception as e:
         print(e)
 
+
 # conn = get_conn_object("./data.db")
+# # add_user(conn, "Ivan")
 
 # cmd = """
 # DROP TABLE IF EXISTS user;
 # DROP TABLE IF EXISTS circle;
 # DROP TABLE IF EXISTS task;
+# DROP TABLE IF EXISTS belongsTo;
 
 # CREATE TABLE user (
 #     id INTEGER PRIMARY KEY AUTOINCREMENT,
