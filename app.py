@@ -114,9 +114,19 @@ def group(group_name):
         conn = sh.get_conn_object("data.db")
         user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
         user_list = sh.get_group_users(conn, group_name)
-        print(user_list)
+        user_id_list = []
+        for n in user_list:
+            user_id_list.append(sh.get_user_id_by_username(conn=conn, username=n))
+        tasks = []
+        for u in user_id_list:
+            tasks.extend(sh.get_user_tasks_by_circle(conn=conn, circle_id=group_name, user_id=u).values.tolist())
+        print(tasks)
+        
+        
+        users = zip(user_id_list, user_list)
+        print(users)
         if request.method == "GET":
-            return render_template("group.html", users = user_list)
+            return render_template("group.html", users = users, tasks = tasks)
         elif request.method == "POST":
             # add a task
             if "task_description" in request.form.keys():
