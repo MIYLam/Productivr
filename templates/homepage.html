@@ -9,17 +9,19 @@
 </head>
 <body>
 
-    <H1>All Groups & Tasks</H1>
+    <H1>Incomplete Tasks</H1>
     
     {%for c in clist%}
         <ol class="alternating-colors">
             <H2><a href="/group/{{c[0]}}" id="circle-{{i}}">{{c[1]}}</a></H2>
               {%for task in tasks[c[0]]%}
+                {% if task["complete"] == 0 %}
                 <li>
                   <strong id="task-{{i}}">{{ task["name"] }}</strong>
                   <p id="task-{{i}}">{{ task["description"] }}</p>
                   
                 </li>
+                {% endif %}
               {%endfor%}
               <hr style="color: black; border:1ch">
         </ol>
