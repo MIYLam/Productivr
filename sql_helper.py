@@ -53,7 +53,7 @@ def user_join_circle(conn: sqlite3.Connection, user_id: int, circle_id: int):
 def add_task(conn: sqlite3.Connection, user_id: int, circle_id: int, name: str, description: str):
     try:
         c = conn.cursor()
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, completed, name, description) VALUES({user_id}, {circle_id}, FALSE, '{name}', '{description}');""")
+        c.execute(f"""INSERT INTO task(user_id, circle_id, completed, name, description) VALUES({user_id}, {circle_id}, FALSE, '{name}', '{description}');""")
         conn.commit()
     except Exception as e:
         print(e)
@@ -82,15 +82,16 @@ def get_group_users(conn: sqlite3.Connection, circle_id: int):
         print(e)
 
 def get_user_groups(conn: sqlite3.Connection, user_id:int):
-    cmd = f"""
-            SELECT name FROM circle 
-            WHERE EXISTS (
-                SELECT circle_id FROM user JOIN belongsTo ON (user.id = belongsTo.user_id)
-                WHERE belongsTo.user_id = {user_id}
-            );
-        """
+    #cmd = f"""
+    #        SELECT name FROM circle 
+    #        WHERE EXISTS (
+    #            SELECT circle_id FROM user JOIN belongsTo ON (user.id = belongsTo.user_id)
+    #            WHERE user.id = {user_id}
+    #        );
+    #    """
+    cmd = f"SELECT id FROM circle WHERE id IN (SELECT circle_id FROM belongsTo WHERE user_id = {user_id});"
     try:
-        return list(retrieve_table(conn, cmd)["name"])
+        return pd.read_sql(sql=cmd,con=conn)['id']
     except Exception as e:
         print(e)
 
@@ -108,9 +109,9 @@ def get_user_id_by_username(conn: sqlite3.Connection, username: str) -> int:
         print(e)
 
 
-def get_circle_id_by_circlename(conn: sqlite3.Connection, circlename: str) -> int:
+def get_circlename_by_circle_id(conn: sqlite3.Connection, circle_id: int) -> str:
     try:
-        return int(pd.read_sql(sql=f"SELECT id FROM circle WHERE name = '{circlename}'", con=conn)["id"])
+        return pd.read_sql(sql=f"SELECT name FROM circle WHERE id = {circle_id}", con=conn).values.tolist()[0][0]
     except Exception as e:
         print(e)
 
