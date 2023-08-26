@@ -1,4 +1,6 @@
-
+.task-popup {
+  display: none;
+}
 /* Popup container */
 .popup {
     position: relative;
