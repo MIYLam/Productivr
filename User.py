@@ -1,11 +1,18 @@
+from Task import Task
+from Group import Group
+from random import randint
 class User:
+    tasks = []
+    groups = []
+    
     def __init__(self, username, password):
         self.username = username
         self.password = password
+        self.groups = []  # List of group IDs or Group objects
 
     
     def createTask(self, description, title, group):
-        task = Task(title, description, self.username , group )
+        task = Task(title, description, self , group )
         self.tasks.append(task)
         group.addTask(task)
     
@@ -21,13 +28,3 @@ class User:
     def addToTasks(self, task: Task):
         self.tasks.append(task)
     
-    def getGroups(self):
-        return self.groups
-    
-    def getTasks(self):
-        return self.tasks
-    
-
-    def add_group(self, group):
-        self.groups.append(group)
-

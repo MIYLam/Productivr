@@ -2,9 +2,11 @@ from flask import Flask, render_template, request, session, redirect, url_for, s
 import json
 from typing import Dict
 
-app = Flask(__name__, template_folder='templates', static_folder='static')
+app = Flask(__name__,
+            static_url_path="",
+            static_folder="templates")
 
-# app.config['STATIC_FOLDER'] = "static"
+app.config['STATIC_FOLDER'] = "templates"
 app.config["SECRET_KEY"] = "fmheiruwomhguweiomchpwnjslrfjio$%$#^@#$nfrwelfhuirqpbf"
 
 
@@ -27,20 +29,6 @@ def login():
                     return redirect(url_for("home")) 
     else:
         return redirect(url_for("home"))
-
-@app.route("/home", methods = ["GET", "POST", "PUT"])
-def home():
-    if "username" not in session.keys():
-        return redirect(url_for("login"))
-    else:
-        if request.method == "GET":
-            return render_template("homepage.html")
-        elif request.method == "POST":
-            # join a group
-            return render_template("homepage.html")
-        else:
-            # create a group
-            return render_template("homepage.html")
 
 
 @app.route("/signup", methods = ["GET", "POST"])
@@ -65,7 +53,22 @@ def signup():
         return redirect(url_for("home"))
 
 
-@app.route("/group/<group_id>", methods = ["GET", "POST", "PUT", "DELETE"])
+app.route("/home", methods = ["GET", "POST", "PUT"])
+def home():
+    if "username" not in session.keys():
+        return redirect(url_for("login"))
+    else:
+        if request.method == "GET":
+            return render_template("home.html")
+        elif request.method == "POST":
+            # join a group
+            return render_template("home.html")
+        else:
+            # create a group
+            return render_template("home.html")
+
+
+app.route("/group/<group_id>", methods = ["GET", "POST", "PUT", "DELETE"])
 def group(group_id):
     if "username" not in session.keys():
         return redirect(url_for("login"))

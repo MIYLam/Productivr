@@ -10,62 +10,21 @@ def get_conn_object(file_path):
         print(e)
     return conn
 
-
-def execute_commands(conn: sqlite3.Connection, cmd: str):
+def execute_commands(conn, cmd):
     try:
         c = conn.cursor()
-        c.executescript(cmd)
+        c.execute(cmd)
+        return pd.DataFrame(c.fetchall())
     except Exception as e:
         print(e)
 
-def retrieve_table(conn: sqlite3.Connection, cmd: str):
-    try:
-        return pd.read_sql(sql = cmd, con = conn)
-    except Exception as e:
-        print(e)
-
-
-def add_user(conn: sqlite3.Connection, username: str):
-    try:
-        c = conn.cursor()
-        c.execute(f"""INSERT INTO user("name") VALUES('{username}');""")
-        conn.commit()
-    except Exception as e:
-        print(e)
-
-def add_circle(conn: sqlite3.Connection, circlename: str, owner_id: int):
-    try:
-        c = conn.cursor()
-        c.execute(f"""INSERT INTO cirle(name, owner_id) VALUES('{circlename}', {owner_id});""")
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, admin) VALUES({owner_id}, (SELECT MAX(id) from circle), TRUE""")
-        conn.commit()
-    except Exception as e:
-        print(e)
-
-def user_join_circle(conn: sqlite3.Connection, user_id: int, circle_id: int):
-    try:
-        c = conn.cursor()
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, admin) VALUES({user_id}, {circle_id}, FALSE""")
-        conn.commit()
-    except Exception as e:
-        print(e)
-
-def add_task(conn: sqlite3.Connection, user_id: int, circle_id: int, name: str, description: str):
-    try:
-        c = conn.cursor()
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, completed, name, description) VALUES({user_id}, {circle_id}, FALSE, '{name}', '{description}'""")
-        conn.commit()
-    except Exception as e:
-        print(e)
 
 # conn = get_conn_object("./data.db")
-# # add_user(conn, "Ivan")
 
 # cmd = """
 # DROP TABLE IF EXISTS user;
 # DROP TABLE IF EXISTS circle;
 # DROP TABLE IF EXISTS task;
-# DROP TABLE IF EXISTS belongsTo;
 
 # CREATE TABLE user (
 #     id INTEGER PRIMARY KEY AUTOINCREMENT,
