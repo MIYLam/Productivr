@@ -30,6 +30,20 @@ def login():
     else:
         return redirect(url_for("home"))
 
+@app.route("/home", methods = ["GET", "POST", "PUT"])
+def home():
+    if "username" not in session.keys():
+        return redirect(url_for("login"))
+    else:
+        if request.method == "GET":
+            return render_template("subpages/homepage.html")
+        elif request.method == "POST":
+            # join a group
+            return render_template("subpages/homepage.html")
+        else:
+            # create a group
+            return render_template("subpages/homepage.html")
+
 
 @app.route("/signup", methods = ["GET", "POST"])
 def signup():
@@ -53,22 +67,7 @@ def signup():
         return redirect(url_for("home"))
 
 
-app.route("/home", methods = ["GET", "POST", "PUT"])
-def home():
-    if "username" not in session.keys():
-        return redirect(url_for("login"))
-    else:
-        if request.method == "GET":
-            return render_template("home.html")
-        elif request.method == "POST":
-            # join a group
-            return render_template("home.html")
-        else:
-            # create a group
-            return render_template("home.html")
-
-
-app.route("/group/<group_id>", methods = ["GET", "POST", "PUT", "DELETE"])
+@app.route("/group/<group_id>", methods = ["GET", "POST", "PUT", "DELETE"])
 def group(group_id):
     if "username" not in session.keys():
         return redirect(url_for("login"))
