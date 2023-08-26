@@ -73,7 +73,7 @@ def home():
                 cid = sh.get_circle_id_by_circlename(conn=conn, circlename=g)
                 tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
             print(tasks_by_group)
-            return render_template("homepage.html")
+            return render_template("homepage.html", group_list = g_ls)
           
         elif request.method == "POST":
             # create group
@@ -85,12 +85,12 @@ def home():
                 sh.user_join_circle(conn=conn, user_id=user_id, circle_id=circle_id)
                 
             # display user tasks in each group
-            tasks_by_group = {}
-            for g in g_ls:
-                cid = sh.get_circle_id_by_circlename(conn=conn, circlename=g)
-                tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
-            print(tasks_by_group)
-            return render_template("homepage.html")
+        tasks_by_group = {}
+        for g in g_ls:
+            cid = sh.get_circle_id_by_circlename(conn=conn, circlename=g)
+            tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
+        print(tasks_by_group)
+        return render_template("homepage.html", group_list = g_ls)
 
 
 @app.route("/group/<group_name>", methods = ["GET", "POST", "PUT", "DELETE"])
