@@ -57,31 +57,39 @@ def add_task(conn: sqlite3.Connection, user_id: int, circle_id: int, name: str, 
     except Exception as e:
         print(e)
 
-def get_user_tasks(conn: sqlite3.Connection, user_id: int, circle_id = -1: int):
+def get_user_tasks(conn: sqlite3.Connection, user_id: int, circle_id: int = -1):
     try:
-        c = conn.cursor()
+        # c = conn.cursor()
         if circle_id == -1:
-            c.execute(f"""SELECT * FROM task WHERE user_id = {user_id} GROUP BY circle_id;""")
+            return pd.read_sql(f"SELECT * FROM task WHERE user_id = {user_id} GROUP BY circle_id;", con=conn)
+            # c.execute(f"""SELECT * FROM task WHERE user_id = {user_id} GROUP BY circle_id;""")
         else:
-            c.execute(f"""SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id};""")
-        records = c.fetchall()
-        return records
+            return pd.read_sql(f"SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id};", con=conn)
+            # c.execute(f"""SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id};""")
+        # records = c.fetchall()
+        # return records
     except Exception as e:
         print(e)
 
 def get_group_users(conn: sqlite3.Connection, circle_id: int):
     try:
-        c = conn.cursor()
-        c.execute(f"""SELECT * FROM user WHERE id IN (SELECT user_id FROM belongsTo WHERE circle_id = {circle_id});""")
-        records = c.fetchall()
-        return records
+        # c = conn.cursor()
+        # c.execute(f"""SELECT * FROM user WHERE id IN (SELECT user_id FROM belongsTo WHERE circle_id = {circle_id});""")
+        # records = c.fetchall()
+        return pd.read_sql(sql=f"SELECT * FROM user WHERE id IN (SELECT user_id FROM belongsTo WHERE circle_id = {circle_id});", con=conn)
     except Exception as e:
         print(e)
 
-def complete_task(conn: sqlite3.Connection, task_id: int):
+def complete_task(conn: sqlite3.Connection, username: int):
     try:
-        c = conn.cursor()
-        c.execute(f"""UPDATE task SET completed = TRUE WHERE id = {task_id};""")
+        return pd.read_sql(sql=f"SELECT id FROM user WHERE name = '{username}'", con=conn)
+    except Exception as e:
+        print(e)
+
+
+def get_user_id_by_username(conn: sqlite3.Connection, username: str) -> int:
+    try:
+        return int(pd.read_sql(sql=f"SELECT id FROM user WHERE name = '{'ok'}'", con=conn)["id"])
     except Exception as e:
         print(e)
 
