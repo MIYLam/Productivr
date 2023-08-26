@@ -1,12 +1,11 @@
 from flask import Flask, render_template, request, session, redirect, url_for, send_file
 import json
 from typing import Dict
+import sql_helper as sh
 
-app = Flask(__name__,
-            static_url_path="",
-            static_folder="templates")
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
-app.config['STATIC_FOLDER'] = "templates"
+# app.config['STATIC_FOLDER'] = "static"
 app.config["SECRET_KEY"] = "fmheiruwomhguweiomchpwnjslrfjio$%$#^@#$nfrwelfhuirqpbf"
 
 
@@ -30,9 +29,38 @@ def login():
     else:
         return redirect(url_for("home"))
 
+@app.route("/home", methods = ["GET", "POST", "PUT"])
+def home():
+    conn = sh.get_conn_object("data.db")
+
+    if "username" not in session.keys():
+        return redirect(url_for("login"))
+    else:
+        if request.method == "GET":
+
+            # display user tasks in each group
+
+            return render_template("homepage.html")
+        elif request.method == "POST":
+            # join a group
+            user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
+            circle_id: int = int(request.form["groupId"])
+            sh.user_join_circle(conn=conn, user_id=user_id, circle_id=circle_id)
+
+            # display user tasks in each group
+
+            return render_template("homepage.html")
+        else:
+            # create a group
+            user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
+            # sh.add_circle(conn=conn, circlename=, owner_id=)
+            return render_template("homepage.html")
+
 
 @app.route("/signup", methods = ["GET", "POST"])
 def signup():
+    conn = sh.get_conn_object("data.db")
+
     if "username" not in session.keys():
         if request.method == "GET":
             return render_template("signup.html")
@@ -43,32 +71,18 @@ def signup():
             password = request.form["password"]
             if username not in users.keys():
                 users[username] = password
-                with open('data.json', 'w') as f:
-                    json.dump(users, f)
+                with open('users.json', 'w') as f:
+                    json.dump(users, f, indent=2)
                 session["username"] = username
-                return redirect(url_for(home))
+                sh.add_user(conn=conn, username=username)
+                return redirect(url_for("home"))
             else:
                 return redirect(url_for("login"))
     else:
         return redirect(url_for("home"))
 
 
-app.route("/home", methods = ["GET", "POST", "PUT"])
-def home():
-    if "username" not in session.keys():
-        return redirect(url_for("login"))
-    else:
-        if request.method == "GET":
-            return render_template("home.html")
-        elif request.method == "POST":
-            # join a group
-            return render_template("home.html")
-        else:
-            # create a group
-            return render_template("home.html")
-
-
-app.route("/group/<group_id>", methods = ["GET", "POST", "PUT", "DELETE"])
+@app.route("/group/<group_id>", methods = ["GET", "POST", "PUT", "DELETE"])
 def group(group_id):
     if "username" not in session.keys():
         return redirect(url_for("login"))
