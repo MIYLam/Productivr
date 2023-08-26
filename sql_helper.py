@@ -52,7 +52,7 @@ def user_join_circle(conn: sqlite3.Connection, user_id: int, circle_id: int):
 def add_task(conn: sqlite3.Connection, user_id: int, circle_id: int, name: str, description: str):
     try:
         c = conn.cursor()
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, completed, name, description) VALUES({user_id}, {circle_id}, FALSE, '{name}', '{description});'""")
+        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, completed, name, description) VALUES({user_id}, {circle_id}, FALSE, '{name}', '{description}');""")
         conn.commit()
     except Exception as e:
         print(e)

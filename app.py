@@ -37,17 +37,17 @@ def home():
         return redirect(url_for("login"))
     else:
         if request.method == "GET":
-
             # display user tasks in each group
-
+            user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
             return render_template("homepage.html")
+          
         elif request.method == "POST":
             # create group
             if "Group Name" in request.form.keys():
                 user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
 
                 return render_template("homepage.html")
-
+              
             # join group
             elif True:
                 user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
