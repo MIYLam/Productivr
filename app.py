@@ -137,9 +137,13 @@ def group(group_id):
                     sh.add_task(conn,user_id,group_id,request.form["task_name"],request.form["task_description"])
                 else:
                     sh.add_task(conn,user_id,group_id,request.form["task_name"],"")
-
+            # task complete
             if "done" in request.form.keys():
                 sh.task_done(conn=conn, task_id=int(request.form["done"]))
+
+            # delete task
+            if "delete" in request.form.keys():
+                sh.delete_task(conn=conn, task_id=int(request.form["delete"]))
 
         return redirect(f"{group_id}")
 

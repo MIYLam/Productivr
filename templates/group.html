@@ -22,10 +22,14 @@
             <form action="/group/{{t[2]}}" method="POST">
               {% if t[1] == session %}
                 <form action="/group/{{t[2]}}" method="POST">
-                  <button type="submit" name="done" value="{{t[0]}}">Done</button>
+                  <button type="submit" name="done" value="{{t[0]}}">✅</button>
                 </form>
-                {% endif %}
+                <form action="/group/{{t[2]}}" method="POST">
+                  <button type="submit" name="delete" value="{{t[0]}}">❌</button>
+                </form>
+              {% endif %}
             </form>
+          <br>
           <br>
           </li>
         {% endif %}
@@ -35,10 +39,14 @@
             <form action="/group/{{t[2]}}" method="POST">
               {% if t[1] == session %}
                 <form action="/group/{{t[2]}}" method="POST">
-                  <button type="submit" name="done" value="{{t[0]}}">Done</button>
+                  <button type="submit" name="done" value="{{t[0]}}">🔄</button>
                 </form>
-                {% endif %}
+                <form action="/group/{{t[2]}}" method="POST">
+                  <button type="submit" name="delete" value="{{t[0]}}">❌</button>
+                </form>
+              {% endif %}
             </form>
+          <br>
           <br>
           </li>
         {% endif %}

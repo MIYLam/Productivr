@@ -15,11 +15,10 @@
         <ol class="alternating-colors">
             <H2><a href="/group/{{c[0]}}" id="circle-{{i}}">{{c[1]}}</a></H2>
               {%for task in tasks[c[0]]%}
-                {% if task["complete"] == 0 %}
+                {% if (task["completed"] == 0) or (task["completed"] == FALSE) %}
                 <li>
                   <strong id="task-{{i}}">{{ task["name"] }}</strong>
                   <p id="task-{{i}}">{{ task["description"] }}</p>
-                  
                 </li>
                 {% endif %}
               {%endfor%}

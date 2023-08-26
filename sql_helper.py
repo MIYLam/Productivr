@@ -113,6 +113,13 @@ def task_done(conn: sqlite3.Connection, task_id: int):
     except Exception as e:
         print(e)
 
+def delete_task(conn: sqlite3.Connection, task_id: int):
+    cmd = f"DELETE FROM task WHERE id = {task_id};"
+    try:
+        execute_commands(conn=conn, cmd=cmd)
+    except Exception as e:
+        print(e)
+
 
 def get_user_id_by_username(conn: sqlite3.Connection, username: str) -> int:
     try:
