@@ -44,8 +44,8 @@ def home():
         elif request.method == "POST":
             # create group
             if "Group Name" in request.form.keys():
-                user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
-
+                user_id: int = sh.get_user_id_by_username(conn=conn, username=session["username"])
+                sh.add_circle(conn=conn, circlename=request.form["Group Name"], owner_id=user_id)
                 return render_template("homepage.html")
               
             # join group
