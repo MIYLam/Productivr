@@ -44,8 +44,8 @@ def home():
         elif request.method == "POST":
             # create group
             if "Group Name" in request.form.keys():
-                user_id: int = sh.get_user_id_by_username(conn=conn, username=session["username"])
-                sh.add_circle(conn=conn, circlename=request.form["Group Name"], owner_id=user_id)
+                user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
+
                 return render_template("homepage.html")
               
             # join group
@@ -84,8 +84,13 @@ def signup():
         return redirect(url_for("home"))
 
 
-@app.route("/group/<group_id>", methods = ["GET", "POST", "PUT", "DELETE"])
-def group(group_id):
+@app.route("/group/<group_name>", methods = ["GET", "POST", "PUT", "DELETE"])
+def group(group_name):
+    conn = sh.get_conn_object("data.db")
+    #get user id 
+    user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
+    circle_id = sh.get_circle_id_by_circlename(conn, group_name)
+    
     if "username" not in session.keys():
         return redirect(url_for("login"))
     else:
@@ -93,9 +98,13 @@ def group(group_id):
             return render_template("group.html")
         elif request.method == "POST":
             # add a task
+            sh.add_task(conn = conn, user_id = user_id,name = request.form["title"], description= request.form["description"])
             return render_template("group.html")
         elif request.method == "DELETE":
             # delete a task by id
+            data = request.json
+            task_id = data['task_id']
+            sh.delete_task(conn = conn, user_id = user_id, task_id = task_id)
             return render_template("group.html")
         else:
             # tick off a task

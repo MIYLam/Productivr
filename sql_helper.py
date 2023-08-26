@@ -100,7 +100,11 @@ def get_circle_id_by_circlename(conn: sqlite3.Connection, circlename: str) -> in
     except Exception as e:
         print(e)
 
-
+def delete_task(conn: sqlite3.Connection, user_id: int, task_id: int):
+    try:
+        return int(pd.read_sql(sql=f"DELETE FROM task WHERE name = '{task_id}'", con=conn))
+    except Exception as e:
+        print(e)
 # conn = get_conn_object("./data.db")
 # # add_user(conn, "Ivan")
 
