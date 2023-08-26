@@ -18,3 +18,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+
+function openForm() {
+    document.getElementById("taskAdd").style.display = "block";
+  }
+  
+function closeForm() {
+    document.getElementById("taskAdd").style.display = "none";
+}
