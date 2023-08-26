@@ -28,6 +28,7 @@ def login():
                     return redirect(url_for("home")) 
     else:
         return redirect(url_for("home"))
+<<<<<<< HEAD
 
 @app.route("/home", methods = ["GET", "POST", "PUT"])
 def home():
@@ -58,6 +59,9 @@ def home():
 
                 return render_template("homepage.html")
 
+=======
+    
+>>>>>>> 309c3531e75d0ceb4a140b5c5428903f13383db8
 
 @app.route("/signup", methods = ["GET", "POST"])
 def signup():
@@ -84,16 +88,60 @@ def signup():
         return redirect(url_for("home"))
 
 
+<<<<<<< HEAD
 @app.route("/group/<group_name>", methods = ["GET", "POST", "PUT", "DELETE"])
 def group(group_name):
     conn = sh.get_conn_object("data.db")
     #get user id 
     user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
     circle_id = sh.get_circle_id_by_circlename(conn, group_name)
+=======
+@app.route("/home", methods = ["GET", "POST", "PUT"])
+def home():
+>>>>>>> 309c3531e75d0ceb4a140b5c5428903f13383db8
     
     if "username" not in session.keys():
         return redirect(url_for("login"))
     else:
+        conn = sh.get_conn_object("data.db")
+        user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
+        g_ls = sh.get_user_groups(conn=conn, user_id=user_id)
+        print(g_ls)
+        
+        if request.method == "GET":
+            # display user tasks in each group
+            tasks_by_group = {}
+            for g in g_ls:
+                cid = sh.get_circle_id_by_circlename(conn=conn, circlename=g)
+                tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
+            print(tasks_by_group)
+            return render_template("homepage.html", group_list = g_ls)
+          
+        elif request.method == "POST":
+            # create group
+            if "Group Name" in request.form.keys():
+                sh.add_circle(conn=conn, circlename=request.form["Group Name"], owner_id=user_id)            
+            # join group
+            elif True:
+                circle_id: int = int(request.form["groupId"])
+                sh.user_join_circle(conn=conn, user_id=user_id, circle_id=circle_id)
+                
+            # display user tasks in each group
+        tasks_by_group = {}
+        for g in g_ls:
+            cid = sh.get_circle_id_by_circlename(conn=conn, circlename=g)
+            tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
+        print(tasks_by_group)
+        return render_template("homepage.html", group_list = g_ls)
+
+
+@app.route("/group/<group_name>", methods = ["GET", "POST", "PUT", "DELETE"])
+def group(group_name):
+
+    if "username" not in session.keys():
+        return redirect(url_for("login"))
+    else:
+        conn = sh.get_conn_object("data.db")
         if request.method == "GET":
             return render_template("group.html")
         elif request.method == "POST":

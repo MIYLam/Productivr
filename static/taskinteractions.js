@@ -3,7 +3,7 @@
 
 document.addEventListener("DOMContentLoaded", function() {
     var deletionButton = document.querySelectorAll(".deletion");
-    
+    var taskToggleButton = document.querySelectorAll(".open-button")
     // Loop through each button and add an event listener
     deletionButton.forEach(function(button) {
         button.addEventListener("click", function() {
@@ -17,13 +17,15 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
+    taskToggleButton.forEach
 });
 
 
 function openForm() {
-    document.getElementById("taskAdd").style.display = "block";
-  }
-  
-function closeForm() {
-    document.getElementById("taskAdd").style.display = "none";
+    if (document.getElementById("circleAdd").style.display == "block"){
+        document.getElementById("circleAdd").style.display = "none";
+    }else{
+    document.getElementById("circleAdd").style.display = "block";
+    }
+    
 }

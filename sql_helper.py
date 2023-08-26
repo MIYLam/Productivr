@@ -15,6 +15,7 @@ def execute_commands(conn: sqlite3.Connection, cmd: str):
     try:
         c = conn.cursor()
         c.executescript(cmd)
+        conn.commit()
     except Exception as e:
         print(e)
 
@@ -36,7 +37,7 @@ def add_circle(conn: sqlite3.Connection, circlename: str, owner_id: int):
     try:
         c = conn.cursor()
         c.execute(f"""INSERT INTO circle(name, owner_id) VALUES('{circlename}', {owner_id});""")
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, admin) VALUES({owner_id}, (SELECT MAX(id) + 1 from circle), TRUE);""")
+        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, admin) VALUES({owner_id}, (SELECT (MAX(id) + 1) from circle), TRUE);""")
         conn.commit()
     except Exception as e:
         print(e)
@@ -80,6 +81,19 @@ def get_group_users(conn: sqlite3.Connection, circle_id: int):
     except Exception as e:
         print(e)
 
+def get_user_groups(conn: sqlite3.Connection, user_id:int):
+    cmd = f"""
+            SELECT name FROM circle 
+            WHERE EXISTS (
+                SELECT circle_id FROM user JOIN belongsTo ON (user.id = belongsTo.user_id)
+                WHERE belongsTo.user_id = {user_id}
+            );
+        """
+    try:
+        return list(retrieve_table(conn, cmd)["name"])
+    except Exception as e:
+        print(e)
+
 def complete_task(conn: sqlite3.Connection, username: int):
     try:
         return pd.read_sql(sql=f"SELECT id FROM user WHERE name = '{username}'", con=conn)
@@ -100,6 +114,7 @@ def get_circle_id_by_circlename(conn: sqlite3.Connection, circlename: str) -> in
     except Exception as e:
         print(e)
 
+<<<<<<< HEAD
 def delete_task(conn: sqlite3.Connection, user_id: int, task_id: int):
     try:
         return int(pd.read_sql(sql=f"DELETE FROM task WHERE name = '{task_id}'", con=conn))
@@ -148,3 +163,5 @@ def delete_task(conn: sqlite3.Connection, user_id: int, task_id: int):
 # execute_commands(conn, cmd)
 
 # conn.close()
+=======
+>>>>>>> 309c3531e75d0ceb4a140b5c5428903f13383db8
