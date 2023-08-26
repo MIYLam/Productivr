@@ -77,7 +77,11 @@ def get_group_users(conn: sqlite3.Connection, circle_id: int):
         # c = conn.cursor()
         # c.execute(f"""SELECT * FROM user WHERE id IN (SELECT user_id FROM belongsTo WHERE circle_id = {circle_id});""")
         # records = c.fetchall()
-        return pd.read_sql(sql=f"SELECT * FROM user WHERE id IN (SELECT user_id FROM belongsTo WHERE circle_id = {circle_id});", con=conn)
+        records = pd.read_sql(sql=f"SELECT name FROM user WHERE id IN (SELECT user_id FROM belongsTo WHERE circle_id = {circle_id});", con=conn).values.tolist()
+        users = []
+        for r in records:
+            users.append(r[0])
+        return users
     except Exception as e:
         print(e)
 
