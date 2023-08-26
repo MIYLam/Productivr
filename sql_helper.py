@@ -66,7 +66,7 @@ def get_user_tasks_by_circle(conn: sqlite3.Connection, user_id: int, circle_id: 
             return pd.read_sql(f"SELECT * FROM task WHERE user_id = {user_id} GROUP BY circle_id;", con=conn)
             # c.execute(f"""SELECT * FROM task WHERE user_id = {user_id} GROUP BY circle_id;""")
         else:
-            return pd.read_sql(f"SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id} AND completed = FALSE;", con=conn)
+            return pd.read_sql(f"SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id}", con=conn)
             # c.execute(f"""SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id};""")
         # records = c.fetchall()
         # return records
@@ -107,7 +107,7 @@ def complete_task(conn: sqlite3.Connection, username: int):
         print(e)
 
 def task_done(conn: sqlite3.Connection, task_id: int):
-    cmd = f"UPDATE task set completed = TRUE where id = {task_id};"
+    cmd = f"UPDATE task set completed = completed*(-1)+1 where id = {task_id};"
     try:
         execute_commands(conn=conn, cmd=cmd)
     except Exception as e:

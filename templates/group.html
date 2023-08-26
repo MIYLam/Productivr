@@ -29,12 +29,28 @@
               <h3 class = "user_display">{{u[1]}}'s to-do list</h3>
             </div>
             {%for t in tasks%}
-              {% if t[1] == u[0] %}
-              <div class="container" id="task_entry">
-                <p class = "user_display">{{t[4]}}</p>
+              {% if t[1] == u[0] and t[3] == 0 %}
+              <div class="incomplete_task">
+                <h4 class = "name">{{t[4]}}</h4>
+                <p class = "description">{{t[5]}}</p>
+                {% if t[1] == session %}
                 <form action="/group/{{t[2]}}" method="POST">
                   <button type="submit" name="done" value="{{t[0]}}">Done</button>
                 </form>
+                {% endif %}
+              </div>
+              <br>
+              {% endif %}
+
+              {% if t[1] == u[0] and t[3] == 1 %}
+              <div class="complete_task">
+                <h4 class = "name"><s>{{t[4]}}</s></h4>
+                <p class = "description">{{t[5]}}</p>
+                {% if t[1] == session %}
+                <form action="/group/{{t[2]}}" method="POST">
+                  <button type="submit" name="done" value="{{t[0]}}">Done</button>
+                </form>
+                {% endif %}
               </div>
               <br>
               {% endif %}

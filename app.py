@@ -127,7 +127,7 @@ def group(group_id):
         users = zip(user_id_list, user_list)
         # print(users)
         if request.method == "GET":
-            return render_template("group.html", users1 = users, users2 = users, tasks = tasks, group_name = group_name)
+            return render_template("group.html", users1 = users, session = user_id, tasks = tasks, group_name = group_name)
         elif request.method == "POST":
             if "done" in request.form.keys():
                 print(request.form["done"])
