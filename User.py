@@ -8,11 +8,10 @@ class User:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.groups = []  # List of group IDs or Group objects
 
     
     def createTask(self, description, title, group):
-        task = Task(title, description, self , group )
+        task = Task(title, description, self.username , group )
         self.tasks.append(task)
         group.addTask(task)
     
@@ -27,4 +26,11 @@ class User:
         
     def addToTasks(self, task: Task):
         self.tasks.append(task)
+    
+    def getGroups(self):
+        return self.groups
+    
+    def getTasks(self):
+        return self.tasks
+    
     
