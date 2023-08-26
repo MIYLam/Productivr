@@ -15,17 +15,23 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="group.html">Group</a>
     </div>
-    
-    <div id="main">
-        <button class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button>
-        <h2>Collapsed Sidebar</h2>
-        <p>Content...</p>
-    </div>
-    
-    <h1>Your tasks</h1>
-    <div class="container" id="task_holder">
-        
 
+    <div id="main">
+        <div class="column">
+        <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+        
+        <h1>Your tasks</h1>
+        <div class="container" id="task_holder" method="get">
+        </div>
+
+        <h1>Create a group</h1>
+        <form id="group-creater" method="put">
+            <label for="Group name">
+            </label>
+            <input type="text" name="Group Name" placeholder="Group Name" id="groupname" required>
+            <input type="submit" value="Register">
+          </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
