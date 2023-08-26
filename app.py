@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, send_file
+from flask import Flask, render_template, request, session, redirect, url_for
 import json
 from typing import Dict
 import sql_helper as sh
