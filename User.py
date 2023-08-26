@@ -9,7 +9,7 @@ class User:
         self.username = username
         self.password = password
         self.groups = []  # List of group IDs or Group objects
-        self.id = username + str(randint(0,100000))
+
     
     def createTask(self, description, title, group):
         task = Task(title, description, self , group )
@@ -19,9 +19,12 @@ class User:
     def createGroup(self,name):
         group = Group(name)
         self.groups.append(group)
-        group.getMembers
+        group.addMembers(self)
         
-       
+    def joinGroup(self, group):
+        self.groups.append(group)
+        group.addMember(self)
+        
     def addToTasks(self, task: Task):
         self.tasks.append(task)
     
