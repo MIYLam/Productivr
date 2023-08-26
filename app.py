@@ -81,7 +81,7 @@ def home():
             print(group_names)
             clist = zip(g_ls,group_names)
             
-            return render_template("homepage.html", clist = clist, tasks = tasks_by_group)
+            return render_template("homepage.html", clist = clist, tasks = tasks_by_group, username = session["username"])
           
         elif request.method == "POST":
             # create group
