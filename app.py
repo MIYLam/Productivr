@@ -88,8 +88,9 @@ def home():
             if "Group Name" in request.form.keys():
                 sh.add_circle(conn=conn, circlename=request.form["Group Name"], owner_id=user_id)            
             # join group
-            elif True:
-                circle_id: int = int(request.form["circle_id"])
+            else:
+                circle_name = request.form["circle_id"]
+                circle_id = sh.get_circle_id_by_circlename(conn, circle_name)
                 sh.user_join_circle(conn=conn, user_id=user_id, circle_id=circle_id)
                 
             # display user tasks in each group
@@ -105,42 +106,44 @@ def home():
             return redirect(url_for("home"))
 
 
-@app.route("/group/<group_name>", methods = ["GET", "POST", "PUT", "DELETE"])
-def group(group_name):
+@app.route("/group/<group_id>", methods = ["GET", "POST"])
+def group(group_id):
 
     if "username" not in session.keys():
         return redirect(url_for("login"))
     else:
         conn = sh.get_conn_object("data.db")
         user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
-        user_list = sh.get_group_users(conn, group_name)
+        user_list = sh.get_group_users(conn, group_id)
+        group_name = sh.get_circlename_by_circle_id(conn=conn, circle_id=group_id)
         user_id_list = []
         for n in user_list:
             user_id_list.append(sh.get_user_id_by_username(conn=conn, username=n))
         tasks = []
         for u in user_id_list:
-            tasks.extend(sh.get_user_tasks_by_circle(conn=conn, circle_id=group_name, user_id=u).values.tolist())
+            tasks.extend(sh.get_user_tasks_by_circle(conn=conn, circle_id=group_id, user_id=u).values.tolist())
         print(tasks)
         
-        
         users = zip(user_id_list, user_list)
-        print(users)
+        # print(users)
         if request.method == "GET":
-            return render_template("group.html", users = users, tasks = tasks)
+            return render_template("group.html", users1 = users, users2 = users, tasks = tasks, group_name = group_name)
         elif request.method == "POST":
+            if "done" in request.form.keys():
+                print(request.form["done"])
             # add a task
-            if "task_description" in request.form.keys():
-                sh.add_task(conn,user_id,group_name,request.form["task_name"],request.form["task_description"])
-            else:
-                sh.add_task(conn,user_id,group_name,request.form["task_name"],"")
+            if "task_name" in request.form.keys():
+                if "task_description" in request.form.keys():
+                    sh.add_task(conn,user_id,group_id,request.form["task_name"],request.form["task_description"])
+                else:
+                    sh.add_task(conn,user_id,group_id,request.form["task_name"],"")
 
-            return redirect(f"{group_name}")
-        elif request.method == "DELETE":
-            # delete a task by id
-            return render_template("group.html")
-        else:
-            # tick off a task
-            return render_template("group.html")
+            if "done" in request.form.keys():
+                sh.task_done(conn=conn, task_id=int(request.form["done"]))
+
+        return redirect(f"{group_id}")
+
+            
 
 
 if __name__ == "__main__":

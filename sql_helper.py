@@ -37,7 +37,8 @@ def add_circle(conn: sqlite3.Connection, circlename: str, owner_id: int):
     try:
         c = conn.cursor()
         c.execute(f"""INSERT INTO circle(name, owner_id) VALUES('{circlename}', {owner_id});""")
-        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, admin) VALUES({owner_id}, (SELECT (MAX(id) + 1) from circle), TRUE);""")
+        conn.commit()
+        c.execute(f"""INSERT INTO belongsTo(user_id, circle_id, admin) VALUES({owner_id}, (SELECT MAX(id) from circle), TRUE);""")
         conn.commit()
     except Exception as e:
         print(e)
@@ -65,7 +66,7 @@ def get_user_tasks_by_circle(conn: sqlite3.Connection, user_id: int, circle_id: 
             return pd.read_sql(f"SELECT * FROM task WHERE user_id = {user_id} GROUP BY circle_id;", con=conn)
             # c.execute(f"""SELECT * FROM task WHERE user_id = {user_id} GROUP BY circle_id;""")
         else:
-            return pd.read_sql(f"SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id};", con=conn)
+            return pd.read_sql(f"SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id} AND completed = FALSE;", con=conn)
             # c.execute(f"""SELECT * FROM task WHERE user_id = {user_id} AND circle_id = {circle_id};""")
         # records = c.fetchall()
         # return records
@@ -105,6 +106,13 @@ def complete_task(conn: sqlite3.Connection, username: int):
     except Exception as e:
         print(e)
 
+def task_done(conn: sqlite3.Connection, task_id: int):
+    cmd = f"UPDATE task set completed = TRUE where id = {task_id};"
+    try:
+        execute_commands(conn=conn, cmd=cmd)
+    except Exception as e:
+        print(e)
+
 
 def get_user_id_by_username(conn: sqlite3.Connection, username: str) -> int:
     try:
@@ -119,3 +127,8 @@ def get_circlename_by_circle_id(conn: sqlite3.Connection, circle_id: int) -> str
     except Exception as e:
         print(e)
 
+def get_circle_id_by_circlename(conn: sqlite3.Connection, circle_name: int) -> int:
+    try:
+        return pd.read_sql(sql=f"SELECT id FROM circle WHERE name = '{circle_name}'", con=conn).values.tolist()[0][0]
+    except Exception as e:
+        print(e)

@@ -50,7 +50,7 @@ CREATE TABLE task (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     circle_id INTEGER NOT NULL,
-    completed INTEGER,
+    completed BOOLEAN,
     name TEXT,
     description TEXT
 );
