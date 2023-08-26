@@ -28,7 +28,40 @@ def login():
                     return redirect(url_for("home")) 
     else:
         return redirect(url_for("home"))
+<<<<<<< HEAD
+
+@app.route("/home", methods = ["GET", "POST", "PUT"])
+def home():
+    conn = sh.get_conn_object("data.db")
+
+    if "username" not in session.keys():
+        return redirect(url_for("login"))
+    else:
+        if request.method == "GET":
+            # display user tasks in each group
+            user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
+            return render_template("homepage.html")
+          
+        elif request.method == "POST":
+            # create group
+            if "Group Name" in request.form.keys():
+                user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
+
+                return render_template("homepage.html")
+              
+            # join group
+            elif True:
+                user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
+                circle_id: int = int(request.form["groupId"])
+                sh.user_join_circle(conn=conn, user_id=user_id, circle_id=circle_id)
+
+                # display user tasks in each group
+
+                return render_template("homepage.html")
+
+=======
     
+>>>>>>> 309c3531e75d0ceb4a140b5c5428903f13383db8
 
 @app.route("/signup", methods = ["GET", "POST"])
 def signup():
@@ -55,8 +88,17 @@ def signup():
         return redirect(url_for("home"))
 
 
+<<<<<<< HEAD
+@app.route("/group/<group_name>", methods = ["GET", "POST", "PUT", "DELETE"])
+def group(group_name):
+    conn = sh.get_conn_object("data.db")
+    #get user id 
+    user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
+    circle_id = sh.get_circle_id_by_circlename(conn, group_name)
+=======
 @app.route("/home", methods = ["GET", "POST", "PUT"])
 def home():
+>>>>>>> 309c3531e75d0ceb4a140b5c5428903f13383db8
     
     if "username" not in session.keys():
         return redirect(url_for("login"))
@@ -104,9 +146,13 @@ def group(group_name):
             return render_template("group.html")
         elif request.method == "POST":
             # add a task
+            sh.add_task(conn = conn, user_id = user_id,name = request.form["title"], description= request.form["description"])
             return render_template("group.html")
         elif request.method == "DELETE":
             # delete a task by id
+            data = request.json
+            task_id = data['task_id']
+            sh.delete_task(conn = conn, user_id = user_id, task_id = task_id)
             return render_template("group.html")
         else:
             # tick off a task

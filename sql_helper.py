@@ -114,3 +114,54 @@ def get_circle_id_by_circlename(conn: sqlite3.Connection, circlename: str) -> in
     except Exception as e:
         print(e)
 
+<<<<<<< HEAD
+def delete_task(conn: sqlite3.Connection, user_id: int, task_id: int):
+    try:
+        return int(pd.read_sql(sql=f"DELETE FROM task WHERE name = '{task_id}'", con=conn))
+    except Exception as e:
+        print(e)
+# conn = get_conn_object("./data.db")
+# # add_user(conn, "Ivan")
+
+# cmd = """
+# DROP TABLE IF EXISTS user;
+# DROP TABLE IF EXISTS circle;
+# DROP TABLE IF EXISTS task;
+# DROP TABLE IF EXISTS belongsTo;
+
+# CREATE TABLE user (
+#     id INTEGER PRIMARY KEY AUTOINCREMENT,
+#     name TEXT
+# );
+
+# CREATE TABLE circle (
+#     id INTEGER PRIMARY KEY AUTOINCREMENT,
+#     owner_id INTEGER,
+#     name TEXT,
+#     FOREIGN KEY (owner_id) REFERENCES user (id)
+# );
+
+# CREATE TABLE belongsTo (
+#     user_id INTEGER NOT NULL,
+#     circle_id INTEGER NOT NULL,
+#     admin INTEGER,
+#     FOREIGN KEY (user_id) REFERENCES user (id),
+#     FOREIGN KEY (circle_id) REFERENCES circle (id),
+#     PRIMARY KEY (user_id, circle_id)
+# );
+
+# CREATE TABLE task (
+#     id INTEGER PRIMARY KEY AUTOINCREMENT,
+#     user_id INTEGER NOT NULL,
+#     circle_id INTEGER NOT NULL,
+#     completed INTEGER,
+#     name TEXT,
+#     description TEXT
+# );
+# """
+
+# execute_commands(conn, cmd)
+
+# conn.close()
+=======
+>>>>>>> 309c3531e75d0ceb4a140b5c5428903f13383db8
