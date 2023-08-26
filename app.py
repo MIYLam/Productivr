@@ -42,19 +42,21 @@ def home():
 
             return render_template("homepage.html")
         elif request.method == "POST":
-            # join a group
-            user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
-            circle_id: int = int(request.form["groupId"])
-            sh.user_join_circle(conn=conn, user_id=user_id, circle_id=circle_id)
+            # create group
+            if "Group Name" in request.form.keys():
+                user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
 
-            # display user tasks in each group
+                return render_template("homepage.html")
 
-            return render_template("homepage.html")
-        else:
-            # create a group
-            user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
-            # sh.add_circle(conn=conn, circlename=, owner_id=)
-            return render_template("homepage.html")
+            # join group
+            elif True:
+                user_id: int = sh.get_user_id_by_username(conn=conn, username=request.form["username"])
+                circle_id: int = int(request.form["groupId"])
+                sh.user_join_circle(conn=conn, user_id=user_id, circle_id=circle_id)
+
+                # display user tasks in each group
+
+                return render_template("homepage.html")
 
 
 @app.route("/signup", methods = ["GET", "POST"])
