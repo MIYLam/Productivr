@@ -2,11 +2,9 @@ from flask import Flask, render_template, request, session, redirect, url_for, s
 import json
 from typing import Dict
 
-app = Flask(__name__,
-            static_url_path="",
-            static_folder="templates")
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
-app.config['STATIC_FOLDER'] = "templates"
+# app.config['STATIC_FOLDER'] = "static"
 app.config["SECRET_KEY"] = "fmheiruwomhguweiomchpwnjslrfjio$%$#^@#$nfrwelfhuirqpbf"
 
 
@@ -36,13 +34,13 @@ def home():
         return redirect(url_for("login"))
     else:
         if request.method == "GET":
-            return render_template("subpages/homepage.html")
+            return render_template("homepage.html")
         elif request.method == "POST":
             # join a group
-            return render_template("subpages/homepage.html")
+            return render_template("homepage.html")
         else:
             # create a group
-            return render_template("subpages/homepage.html")
+            return render_template("homepage.html")
 
 
 @app.route("/signup", methods = ["GET", "POST"])
