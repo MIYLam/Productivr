@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 
 def get_conn_object(file_path):
     conn = None
@@ -12,7 +13,8 @@ def get_conn_object(file_path):
 def execute_commands(conn, cmd):
     try:
         c = conn.cursor()
-        c.executescript(cmd)
+        c.execute(cmd)
+        return pd.DataFrame(c.fetchall())
     except Exception as e:
         print(e)
 
@@ -56,3 +58,5 @@ def execute_commands(conn, cmd):
 # """
 
 # execute_commands(conn, cmd)
+
+# conn.close()
