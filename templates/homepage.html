@@ -32,9 +32,9 @@
           {%endfor%}
         </div>
         <h1>Circles</h1>
-          {%for i in range(0, 2)%}
+          {%for g in group_names%}
             <div class="container" id="circle_list">
-              <p id="circle-{{i}}">{{i}}</p>
+              <p id="circle-{{i}}">{{g}}</p>
             </div>
           {%endfor%}
         <button class="open-button" onclick="openForm()">Add Circles</button>

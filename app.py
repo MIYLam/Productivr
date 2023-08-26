@@ -63,17 +63,21 @@ def home():
     else:
         conn = sh.get_conn_object("data.db")
         user_id = sh.get_user_id_by_username(conn=conn, username=session["username"])
-        g_ls = sh.get_user_groups(conn=conn, user_id=user_id)
+        print(user_id)
+        g_ls = sh.get_user_groups(conn=conn, user_id=user_id)['id'].values.tolist()
         print(g_ls)
         
         if request.method == "GET":
             # display user tasks in each group
             tasks_by_group = {}
+            group_names = []
             for g in g_ls:
-                cid = sh.get_circle_id_by_circlename(conn=conn, circlename=g)
-                tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
+                print(g)
+                cid = sh.get_circlename_by_circle_id(conn=conn, circle_id=g)
+                group_names.append(cid)
+            #    tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
             print(tasks_by_group)
-            return render_template("homepage.html")
+            return render_template("homepage.html", group_names = group_names)
           
         elif request.method == "POST":
             # create group
@@ -86,11 +90,15 @@ def home():
                 
             # display user tasks in each group
             tasks_by_group = {}
+            group_names = []
             for g in g_ls:
-                cid = sh.get_circle_id_by_circlename(conn=conn, circlename=g)
-                tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
+                cid = sh.get_circlename_by_circle_id(conn=conn, circle_id=g)
+                group_names.append(cid)
+                #tasks_by_group[g] = sh.get_user_tasks(conn=conn, user_id=user_id, circle_id=cid)
+            print(group_names)
             print(tasks_by_group)
-            return render_template("homepage.html")
+            # return render_template("homepage.html", group_names = group_names)
+            return redirect(url_for("home"))
 
 
 @app.route("/group/<group_name>", methods = ["GET", "POST", "PUT", "DELETE"])

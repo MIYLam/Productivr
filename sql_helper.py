@@ -81,15 +81,16 @@ def get_group_users(conn: sqlite3.Connection, circle_id: int):
         print(e)
 
 def get_user_groups(conn: sqlite3.Connection, user_id:int):
-    cmd = f"""
-            SELECT name FROM circle 
-            WHERE EXISTS (
-                SELECT circle_id FROM user JOIN belongsTo ON (user.id = belongsTo.user_id)
-                WHERE user.id = {user_id}
-            );
-        """
+    #cmd = f"""
+    #        SELECT name FROM circle 
+    #        WHERE EXISTS (
+    #            SELECT circle_id FROM user JOIN belongsTo ON (user.id = belongsTo.user_id)
+    #            WHERE user.id = {user_id}
+    #        );
+    #    """
+    cmd = f"SELECT id FROM circle WHERE id IN (SELECT circle_id FROM belongsTo WHERE user_id = {user_id});"
     try:
-        return list(retrieve_table(conn, cmd))
+        return pd.read_sql(sql=cmd,con=conn)
     except Exception as e:
         print(e)
 
@@ -107,9 +108,9 @@ def get_user_id_by_username(conn: sqlite3.Connection, username: str) -> int:
         print(e)
 
 
-def get_circle_id_by_circlename(conn: sqlite3.Connection, circlename: str) -> int:
+def get_circlename_by_circle_id(conn: sqlite3.Connection, circle_id: int) -> str:
     try:
-        return int(pd.read_sql(sql=f"SELECT id FROM circle WHERE name = '{circlename}'", con=conn)["id"])
+        return pd.read_sql(sql=f"SELECT name FROM circle WHERE id = {circle_id}", con=conn).values.tolist()[0][0]
     except Exception as e:
         print(e)
 
