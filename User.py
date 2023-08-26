@@ -1,10 +1,4 @@
-from Task import Task
-from Group import Group
-from random import randint
 class User:
-    tasks = []
-    groups = []
-    
     def __init__(self, username, password):
         self.username = username
         self.password = password
@@ -33,4 +27,7 @@ class User:
     def getTasks(self):
         return self.tasks
     
-    
+
+    def add_group(self, group):
+        self.groups.append(group)
+
