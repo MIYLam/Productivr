@@ -80,6 +80,19 @@ def get_group_users(conn: sqlite3.Connection, circle_id: int):
     except Exception as e:
         print(e)
 
+def get_user_groups(conn: sqlite3.Connection, user_id:int):
+    cmd = f"""
+            SELECT name FROM circle 
+            WHERE EXISTS (
+                SELECT circle_id FROM user JOIN belongsTo ON (user.id = belongsTo.user_id)
+                WHERE user.id = {user_id}
+            );
+        """
+    try:
+        return list(retrieve_table(conn, cmd))
+    except Exception as e:
+        print(e)
+
 def complete_task(conn: sqlite3.Connection, username: int):
     try:
         return pd.read_sql(sql=f"SELECT id FROM user WHERE name = '{username}'", con=conn)
