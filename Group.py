@@ -1,20 +1,23 @@
 from Task import Task
 
+
 class Group:
     tasks = []
-    groupMembers = []
-    
+    group_members = []
+
     def __init__(self, name):
         self.name = name
-    
-    def addTask(self, task: Task):
+
+    def add_task(self, task: Task):
         self.tasks.append(task)
-        
-    def addMembers(self, user_id):
-        self.groupMembers.append(user_id)
-        
-        
-    def getMembers(self):
-        for user in self.groupMembers:
+
+    def add_members(self, user_id):
+        self.group_members.append(user_id)
+
+    def get_members(self):
+        for user in self.group_members:
             print(user)
-    
+
+    def get_group_tasks(self):
+        for task in self.tasks:
+            print(task)
